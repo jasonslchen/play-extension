@@ -47,18 +47,24 @@ post "/" do
   auth_token = request.env["HTTP_X_GITHUB_TOKEN"]
   
   verified = verify_api_public_key(request, payload)
-  
+  puts 'hits here'
   begin
     if verified
       client = Octokit::Client.new(:access_token => auth_token)
       curr_user = client.user
       parsed_payload = JSON.parse payload
       messages = parsed_payload["messages"]
-      # messages.unshift({
-      #   {
+      messages = messages.unshift({
+          :role => "system",
+          content: "
+          You will reply to every message starting with @#{curr_user.login}
+          "
+      })
+      messages.unshift({
+        role: "system",
+        content: "Pretend you are a seer and you can see the future. Answer the questions to the best of your ability, however you are to talk very cryptic and confusing like."
 
-      #   }
-      # })
+      })
       llm_url = URI $copilot_llm_url
       req = Net::HTTP::Post.new(llm_url.path)
       http = Net::HTTP.new(llm_url.host, llm_url.port)
