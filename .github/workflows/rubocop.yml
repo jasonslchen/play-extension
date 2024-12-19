@@ -50,3 +50,8 @@ jobs:
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: rubocop.sarif
+    - name: TruffleHog OSS
+      # You may pin to the exact commit or the version.
+      # uses: trufflesecurity/trufflehog@ead9dd57486f43830ba2279f3a3c49d4b9c36633
+      uses: trufflesecurity/trufflehog@v3.87.2
+              
