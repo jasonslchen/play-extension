@@ -12,21 +12,15 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
-  schedule:
-    - cron: '20 23 * * 4'
-
 jobs:
-  rubocop:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, macos-13, macos-14 ]
-        ruby: [ruby-3.4.0-rc1]
-    runs-on: ${{ matrix.os }}
-
+  test:
+    runs-on: ubuntu-latest
     steps:
-    - name: TruffleHog OSS
-      # You may pin to the exact commit or the version.
-      # uses: trufflesecurity/trufflehog@ead9dd57486f43830ba2279f3a3c49d4b9c36633
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Secret Scanning
       uses: trufflesecurity/trufflehog@v3.87.2
-              
+      with:
+        extra_args: --results=verified,unknown
